@@ -16,7 +16,7 @@ def compute_RMSE(y_true, y_pred):
     """
 
     # TODO: Compute the Root Mean Squared Error
-    rmse = None
+    rmse = np.sqrt(np.mean((y_true - y_pred)**2))
 
     return rmse
 

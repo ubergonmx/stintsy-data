@@ -42,7 +42,8 @@ class AnalyticalMethod(object):
         # TODO: Append a vector of ones across the dimension of your input
         # data. This accounts for the bias or the constant in your
         # hypothesis function.
-        f_transform = None
+        ones = np.ones(X.shape[0])
+        f_transform = np.column_stack((X, ones))
 
         return f_transform
 
@@ -59,11 +60,11 @@ class AnalyticalMethod(object):
             np.ndarray -- weight vector; has shape (D, 1) for dimension D
         """
         # TODO: Call the feature_transform() method
-        X = None
+        X = self.feature_transform(X)
 
         # TODO: Calculate for the weights using the closed form.
         # Hint: Use np.linalg.pinv.
-        self.W = None
+        self.W = np.linalg.pinv(X.T @ X) @ X.T @ y
 
         return self.W
 
@@ -82,11 +83,11 @@ class AnalyticalMethod(object):
 
         # TODO: Since you transformed your training data to include the bias
         # y-intercept, also transform the features for the test to match.
-        X = None
+        X = self.feature_transform(X)
 
         # TODO: Compute for the predictions of the model on new data using the
         # learned weight vectors.
-        prediction = None
+        prediction = X @ self.W
 
         return prediction
 
@@ -112,7 +113,7 @@ class PolyFitMethod(object):
         """
 
         # TODO: Calculate for the weights using np.polyfit()
-        self.W = None
+        self.W = np.polyfit(X, y, 1)
 
         return self.W
 
@@ -132,6 +133,6 @@ class PolyFitMethod(object):
         # TODO: Compute for the predictions of the model on new data using the
         # learned weight vectors.
         # Hint: Use np.poly1d().
-        prediction = None
+        prediction = np.poly1d(self.W)(X)
 
         return prediction

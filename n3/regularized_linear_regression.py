@@ -16,7 +16,7 @@ def compute_RMSE(y_true, y_pred):
     """
 
     # TODO: Compute the Root Mean Squared Error
-    rmse = None
+    rmse = np.sqrt(np.mean((y_true - y_pred)**2))
 
     return rmse
 
@@ -33,9 +33,18 @@ def poly_feature_transform(X, poly_order=1):
         np.ndarray -- A numpy array of shape (N, (D * order) + 1) representing
         the transformed features following the specified `poly_order`
     """
-    f_transform = None
+
+    if len(X.shape) > 1:
+        N, D = X.shape
+    else:
+        N, D = X.shape[0], 1
+        X = X.reshape(N, D)
+
+    f_transform = np.ones((N, (D * poly_order) + 1))
 
     # TODO: Add features to X until poly_order
+    for i in range(poly_order):
+        f_transform[:, D*i:D*(i+1)] = X**(i+1)
 
     return f_transform
 
@@ -62,7 +71,7 @@ class UnregularizedLinearRegressor(object):
         """
 
         # TODO: Calculate for the weights using np.polyfit()
-        self.W = None
+        self.W = np.polyfit(X, y, self.degree)
 
         return self.W
 
@@ -82,6 +91,6 @@ class UnregularizedLinearRegressor(object):
         # TODO: Compute for the predictions of the model on new data using the
         # learned weight vectors.
         # Hint: Use np.poly1d().
-        prediction = None
+        prediction = np.poly1d(self.W)(X)
 
         return prediction
